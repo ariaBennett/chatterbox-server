@@ -1,5 +1,10 @@
 /* Import node's http module: */
 var http = require("http");
+var url = require("url");
+
+// import request-handler
+var requestHandler = require('./request-handler.js');
+var handleRequest = requestHandler.handleRequest; 
 
 
 /* Every server needs to listen on a port with a unique number. The

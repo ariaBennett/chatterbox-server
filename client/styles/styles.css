@@ -1,0 +1,153 @@
+html {
+    overflow: hidden;
+}
+
+body {
+    background: #eee;
+    text-align: center;
+    margin: 0;
+    padding: 0 25px;
+    font-family: arial, sans-serif;
+}
+
+#main {
+    width: 80%;
+    max-width: 920px;
+    margin: auto;
+    text-align: left;
+    background: white;
+    padding: 30px 60px;
+    border: solid #ddd;
+    border-width: 0 1px 1px 1px;
+}
+
+#main h1 {
+    margin-top: 10;
+    font-size: 35px;
+    margin-bottom: 20px;
+    padding: 0px;
+    font-family: 'Audiowide';
+}
+
+#main h1 span {
+    color: orange;
+}
+
+#main ul {
+    padding-left: 20px;
+}
+
+#main .error {
+    border: 1px solid red;
+    background: #FDEFF0;
+    padding: 20px;
+}
+
+#main .success {
+    margin-top: 25px;
+}
+
+#main .success code {
+    font-size: 12px;
+    color: green;
+    line-height: 13px;
+}
+
+.chat {
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #eee;
+}
+
+.chat .username {
+    font-weight: 800;
+}
+
+.chat:hover {
+    background-color: #ddd;
+}
+
+.spinner {
+    float: right;
+    height: 46px;
+    margin-bottom: 5px;
+}
+
+.spinner img {
+    padding: 10px;
+}
+
+#container {
+    height: 400px;
+    overflow-y: scroll;
+}
+
+div.message {
+    width: 460px;
+    padding: 2px;
+    text-align: left;
+}
+
+.message span {
+}
+
+span.username {
+    color: #999;
+    font-size: .9em;
+    cursor: pointer;
+}
+
+span[group = local] {
+    color: #0DE;
+}
+
+span[group = friend] {
+    color: #0D3;
+}
+
+span[group = friend] + span {
+    font-weight: bold;
+}
+
+span[group = frenemy] {
+    color: #C0C;
+}
+
+span[group = SILENCE] {
+    color: red;
+}
+
+span[group = SILENCE] + span {
+    color: #DDD;
+}
+
+span.content {
+    color: #000;
+    margin-left: 10px;
+    font-size: .9em;
+}
+
+span.date {
+    font-size: .8em;
+    color: #999;
+}
+
+#tools {
+    background: top center url(separator.png) no-repeat;
+    margin: 10px 0;
+    padding: 20px 0;
+}
+
+
+
+input.wordbox {
+    height: 24px;
+    width: 80%;
+    font-size: .9em;
+}
+
+button {
+    height: 30px;
+    width: 80px;
+    font-size: 1em;
+}
