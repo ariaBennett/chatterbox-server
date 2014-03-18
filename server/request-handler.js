@@ -1,4 +1,6 @@
 var assert = require('assert');
+messages = [];
+messageNumber = 0;
 /* You should implement your request handler function in this file.
  * And hey! This is already getting passed to http.createServer()
  * in basic-server.js. But it won't work as is.
@@ -7,7 +9,6 @@ var assert = require('assert');
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
 exports.handleRequest = function(request, response) {
-  messages = [];
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
@@ -36,25 +37,23 @@ exports.handleRequest = function(request, response) {
     request.setEncoding('utf8');
     request.on('data', function(chunk) {
       assert.equal(typeof chunk, 'string');
-      messages.push(chunk);
-      console.log(chunk);
+      var message = JSON.parse(chunk);
+      message.recieved = Date.now();
+      message.id = messageNumber;
+      messageNumber++;
+      messages.push(message);
+      console.log(messages);
     })
     response.end("Message recieved by server.");
   }
-  else if (request.url === "/classes/chatterbox/") {
-    var testResult = {
-      createdAt: "2014-03-17T23:28:41.573Z",
-      objectId: "esOEoi3HMp",
-      roomname: "4chan",
-      text: "asdf",
-      updatedAt: "2014-03-17T23:28:41.573Z",
-      username: "g"
-    };
-    var testResultArray = [testResult, testResult, testResult, testResult, testResult];
-    var testResultArrayObject = {
-      results: testResultArray
-    };
-    response.end(JSON.stringify(testResultArrayObject));
+  else if (request.url === "/classes/chatterbox/requestposts/") {
+    request.setEncoding('utf8');
+    request.on('data', function(chunk){
+      assert.equal(typeof chunk, 'string');
+      var message = JSON.parse(chunk);
+      console.log("recieving: " + message);
+    });
+    response.end(JSON.stringify({message: "test", user: "test", room: "test"}));
   }
   else {
     response.end("Hello, World!");

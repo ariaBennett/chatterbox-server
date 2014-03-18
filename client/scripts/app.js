@@ -1,4 +1,5 @@
 /* global $ */
+window.lastMessageRecieved = 0;
 
 // Creates DOM elements and displays message
 var display = function(obj) {
@@ -59,38 +60,15 @@ var displayLastMessage = function(list) {
 };
 
 // Create POST data
-var makePost = function(message) {
+var makePost = function(url, type, data, success, fail) {
   return {
-    url: 'http://127.0.0.1:3000/classes/chatterbox/makepost/',
-    type: 'POST',
-    data: JSON.stringify(message),
+    url: 'http://127.0.0.1:3000/classes/' + url,
+    type: type, 
+    data: JSON.stringify(data),
     contentType: 'jsonp',
-    jsonpCallback: "_testcb",
-    success: function () {
-      console.log('chatterbox: Message sent');
-    },
-    error: function () {
-      console.error('chatterbox: Failed to send message');
-    }
+    success: success,
+    error: fail
   };
-};
-
-// GET data
-var get = {
-  url: 'http://127.0.0.1:3000/classes/chatterbox/',
-  type: 'GET',
-  contentType: 'jsonp',
-  jsonpCallback: "_testcb",
-  order: 'createdAt',
-  limit: 5,
-  success: function (data) {
-    data = JSON.parse(data);
-    console.log('chatterbox: Messages retrieved');
-    displayLastMessage(data.results);
-  },
-  error: function () {
-    console.error('chatterbox: No response from server');
-  }
 };
 
 // Assembles and sends message object
@@ -106,7 +84,17 @@ var createMessage = function() {
     parseCommand(message);
   }
   else {
-    $.ajax(makePost(message));
+    $.ajax(makePost(
+      "chatterbox/makepost/", 
+      "POST", 
+      message, 
+      function () {
+        console.log('chatterbox: Message sent');
+      },
+      function () {
+        console.error('chatterbox: Failed to send message');
+      }
+    ));
   }
 };
 
@@ -119,8 +107,19 @@ $('.wordbox').on('keydown', function(e) {
 });
 
 // Initial retrival
-$.ajax(get);
-
+$.ajax(makePost(
+  "chatterbox/requestposts/", 
+  "POST", 
+  window.lastMessageRecieved, 
+  function (data) {
+    data = JSON.parse(data);
+    console.log('chatterbox: Messages retrieved');
+    displayLastMessage(data.results);
+  },
+  function () {
+    console.error('chatterbox: No response from server');
+  }
+));
 /*
 // Retrieve every 500 ms
 setInterval(function() {
