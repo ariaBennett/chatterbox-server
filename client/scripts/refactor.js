@@ -2,25 +2,25 @@
 
 window.app = {
   init: function() {
-    app.server = 'https://api.parse.com/1/classes/chatterbox/';
+    app.server = 'http://127.0.0.1:3000/classes/chatterbox/';
     app.people = {};
     app.get = {
-      url: app.server,
+      url: 'http://127.0.0.1:3000/classes/chatterbox',
       type: 'GET',
-      contentType: 'application/json',
-      data: {
-        order: '-createdAt',
-        limit: 5
-      },
+      contentType: 'jsonp',
+      jsonpCallback: "_testcb",
+      order: 'createdAt',
+      limit: 5,
       success: function (data) {
+        data = JSON.parse(data);
         console.log('chatterbox: Messages retrieved');
-        displayLastMessage(data);
-        if (app.people[data.results[0].username] === undefined) {
-          app.people[data.results[0].username] = {};
-          app.people[data.results[0].username].group = null;
+        displayLastMessage(data.results);
+        if (app.people[results.data[0].username] === undefined) {
+          app.people[results.data[0].username] = {};
+          app.people[results.data[0].username].group = null;
         }
       },
-      error: function (data) {
+      error: function () {
         // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
         console.error('chatterbox: No response from server');
       }

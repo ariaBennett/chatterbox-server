@@ -34,6 +34,7 @@ var roomCheckAndDisplay = function(obj) {
 
 // Display most recent message, ignore duplicates and undefined users/messages
 var displayLastMessage = function(list) {
+  console.log(list);
   var print = false;
   var $last = $('.content:last').text();
   for (var i = list.length - 1; i >= 0; i--) {
@@ -63,7 +64,8 @@ var makePost = function(message) {
     url: 'http://127.0.0.1:3000/classes/chatterbox',
     type: 'POST',
     data: JSON.stringify(message),
-    contentType: 'application/json',
+    contentType: 'jsonp',
+    jsonpCallback: "_testcb",
     success: function () {
       console.log('chatterbox: Message sent');
     },
@@ -77,12 +79,12 @@ var makePost = function(message) {
 var get = {
   url: 'http://127.0.0.1:3000/classes/chatterbox/',
   type: 'GET',
-  contentType: 'application/json',
-  data: {
-    order: '-createdAt',
-    limit: 5
-  },
+  contentType: 'jsonp',
+  jsonpCallback: "_testcb",
+  order: 'createdAt',
+  limit: 5,
   success: function (data) {
+    data = JSON.parse(data);
     console.log('chatterbox: Messages retrieved');
     displayLastMessage(data.results);
   },
@@ -119,8 +121,9 @@ $('.wordbox').on('keydown', function(e) {
 // Initial retrival
 $.ajax(get);
 
+/*
 // Retrieve every 500 ms
 setInterval(function() {
   $.ajax(get);
 }, 1000);
-
+*/

@@ -3,19 +3,19 @@ window.currentRoom = 'all';
 
 // Ajax request for 100 messages to list recently used rooms
 var getRooms = {
-  url: 'https://api.parse.com/1/classes/chatterbox/',
+  url: 'http://127.0.0.1:3000/classes/chatterbox',
   type: 'GET',
-  contentType: 'application/json',
-  data: {
-    order: '-createdAt',
-    limit: 100
-  },
+  contentType: 'jsonp',
+  jsonpCallback: "_testcb",
+  order: 'createdAt',
+  limit: 100,
   success: function (data) {
+    data = JSON.parse(data);
     var results = {};
     _.each(data.results, function(item) {
       _.each(item, function(item, key) {
         if (key === 'roomname') {
-          results[item] = true;
+          res[item] = true;
         }
       });
     });

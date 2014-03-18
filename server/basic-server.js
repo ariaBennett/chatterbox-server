@@ -1,6 +1,5 @@
 /* Import node's http module: */
 var http = require("http");
-var url = require("url");
 
 // import request-handler
 var requestHandler = require('./request-handler.js');
