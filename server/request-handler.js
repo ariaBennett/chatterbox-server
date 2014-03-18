@@ -6,6 +6,7 @@
  * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
 exports.handleRequest = function(request, response) {
+  messages = [];
   /* the 'request' argument comes from nodes http module. It includes info about the
   request - such as what URL the browser is requesting. */
 
@@ -30,7 +31,12 @@ exports.handleRequest = function(request, response) {
    * anything back to the client until you do. The string you pass to
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
-  if (request.url === "/classes/chatterbox/") {
+  if (request.url === "/classes/chatterbox/makepost/") {
+    messages.push(request.data);
+    console.log(request);
+    response.end("Message recieved by server.");
+  }
+  else if (request.url === "/classes/chatterbox/") {
     var testResult = {
       createdAt: "2014-03-17T23:28:41.573Z",
       objectId: "esOEoi3HMp",

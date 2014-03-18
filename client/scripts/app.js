@@ -61,7 +61,7 @@ var displayLastMessage = function(list) {
 // Create POST data
 var makePost = function(message) {
   return {
-    url: 'http://127.0.0.1:3000/classes/chatterbox',
+    url: 'http://127.0.0.1:3000/classes/chatterbox/makepost/',
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'jsonp',
