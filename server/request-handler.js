@@ -1,3 +1,4 @@
+var assert = require('assert');
 /* You should implement your request handler function in this file.
  * And hey! This is already getting passed to http.createServer()
  * in basic-server.js. But it won't work as is.
@@ -32,8 +33,12 @@ exports.handleRequest = function(request, response) {
    * response.end() will be the body of the response - i.e. what shows
    * up in the browser.*/
   if (request.url === "/classes/chatterbox/makepost/") {
-    messages.push(request.data);
-    console.log(request);
+    request.setEncoding('utf8');
+    request.on('data', function(chunk) {
+      assert.equal(typeof chunk, 'string');
+      messages.push(chunk);
+      console.log(chunk);
+    })
     response.end("Message recieved by server.");
   }
   else if (request.url === "/classes/chatterbox/") {
