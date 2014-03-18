@@ -43,17 +43,25 @@ exports.handleRequest = function(request, response) {
       messageNumber++;
       messages.push(message);
       console.log(messages);
-    })
+   et
     response.end("Message recieved by server.");
   }
   else if (request.url === "/classes/chatterbox/requestposts/") {
+    var newMessages = {};
     request.setEncoding('utf8');
+    
     request.on('data', function(chunk){
       assert.equal(typeof chunk, 'string');
-      var message = JSON.parse(chunk);
-      console.log("recieving: " + message);
+      var lastMessageRecieved = JSON.parse(chunk);
+      console.log("Last Message Client Recieved: " + lastMessageRecieved);
+      if (messages.length !== 0 && (lastMessageRecieved === 0 || (lastMessageRecieved < messages.length && lastMessageRecieved > -1))) {
+        newMessages['results'] = messages.slice(lastMessageRecieved);
+      }
     });
-    response.end(JSON.stringify({message: "test", user: "test", room: "test"}));
+    request.on('end', function(){
+      response.end(JSON.stringify(newMessages));
+    });
+    
   }
   else {
     response.end("Hello, World!");

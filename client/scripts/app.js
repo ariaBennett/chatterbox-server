@@ -114,6 +114,7 @@ $.ajax(makePost(
   function (data) {
     data = JSON.parse(data);
     console.log('chatterbox: Messages retrieved');
+    console.log(data);
     displayLastMessage(data.results);
   },
   function () {
