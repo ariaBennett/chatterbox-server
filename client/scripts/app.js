@@ -1,12 +1,18 @@
 /* global $ */
 window.lastMessageRecieved = 0;
 window.messages = [];
+window.currentRoom = 'all';
 
 // Creates DOM elements and displays message
 var display = function(obj) {
   $('#container').append('<div class="message"></div>');
   $('.message:last').append('<span class="date"></span>');
-  $('.date:last').text(obj.createdAt.slice(11, 16) + ' - ');
+  var date = obj.createdAt;
+  var startSlice = date.indexOf(':') + 1;
+  var date = date.slice(startSlice);
+  var endSlice = date.indexOf('M') + 1;
+  var formattedDate = date.slice(0, endSlice);
+  $('.date:last').text(formattedDate + ' - ');
   $('.message:last').append('<span class="username"></span>');
   $('.username:last').text(obj.username);
   $('.message:last').append('<span class="content"></span>');
@@ -35,28 +41,9 @@ var roomCheckAndDisplay = function(obj) {
 };
 
 // Display most recent message, ignore duplicates and undefined users/messages
-var displayLastMessage = function(list) {
-  console.log(list);
-  var print = false;
-  var $last = $('.content:last').text();
-  for (var i = list.length - 1; i >= 0; i--) {
-    if (list[i].username === undefined || list[i].text === undefined) {
-      list.splice(i, 1);
-      continue;
-    }
-    if ($last !== list[i].text) {
-      if (!print) {
-        continue;
-      }
-      roomCheckAndDisplay(list[i]);
-    } else {
-      print = true;
-    }
-  }
-  if (print === false) {
-    for (var i = list.length - 1; i>= 0; i--) {
-      roomCheckAndDisplay(list[i]);
-    }
+var displayNewMessages = function(messages) {
+  for (var i = 0; i < messages.length; i++) {
+    roomCheckAndDisplay(messages[i]);
   }
 };
 
@@ -74,10 +61,14 @@ var makePost = function(url, type, data, success, fail) {
 
 // Assembles and sends message object
 var createMessage = function() {
+  var currentTime = new Date(Date.now());
+  currentTime = currentTime.toLocaleString();
+  console.log(currentTime);
   var message = {
     'username': document.URL.slice(document.URL.indexOf("=") + 1),
     'text': $('.wordbox').val(),
-    'roomname': window.currentRoom
+    'roomname': window.currentRoom,
+    'createdAt': currentTime
   };
   $('.wordbox').val(''); // Clears input box
 
@@ -114,13 +105,16 @@ var requestMessages = function() {
     window.lastMessageRecieved, 
     function (data) {
       data = JSON.parse(data);
-      if (data.results !== undefined) {
-        var resultsLength = data.results.length;
+      var newMessages = data.results;
+      if (newMessages !== undefined) {
+        var resultsLength = newMessages.length;
 
-        var lastMessageId = data.results[(resultsLength - 1)].id;
+        var lastMessageId = newMessages[(resultsLength - 1)].id;
 
-        window.messages = window.messages.concat(data.results);
+        window.messages = window.messages.concat(newMessages);
         window.lastMessageRecieved = lastMessageId;
+
+        displayNewMessages(newMessages);
 
         console.log('chatterbox: New Messages retrieved');
       }

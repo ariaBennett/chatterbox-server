@@ -21,7 +21,6 @@ exports.handleRequest = function(request, response) {
       messageNumber++;
       message.id = messageNumber;
       messages.push(message);
-      console.log(messages);
     });
     response.end("Message recieved by server.");
   }
@@ -32,11 +31,8 @@ exports.handleRequest = function(request, response) {
     request.on('data', function(chunk){
       assert.equal(typeof chunk, 'string');
       var lastMessageRecieved = JSON.parse(chunk);
-      console.log("Last Message Client Recieved: " + lastMessageRecieved);
       if (messageNumber !== 0 && ((lastMessageRecieved < messageNumber) && lastMessageRecieved > -1)) {
-        console.log(lastMessageRecieved, messageNumber);
         newMessages['results'] = messages.slice(lastMessageRecieved);
-        console.log(newMessages.results);
       }
     });
     request.on('end', function(){
