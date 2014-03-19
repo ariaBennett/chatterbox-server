@@ -41,7 +41,7 @@ exports.handleRequest = function(request, response) {
     
   }
   else {
-    response.end("Hello, World!");
+    response.end("Buzz buzz little bees.");
   }
 };
 
