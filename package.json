@@ -1,7 +1,7 @@
 {
   "name": "chatterbox",
   "version": "0.0.1",
-  "main": "server/main.js",
+  "main": "main.js",
   "author": "Aria Bennett",
   "license": "Copyright 2013, Aria Bennett. All rights reserved.",
   "dependencies": {},
