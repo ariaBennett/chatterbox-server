@@ -1,5 +1,6 @@
 /* global $ */
 window.lastMessageRecieved = 0;
+window.messages = [];
 
 // Creates DOM elements and displays message
 var display = function(obj) {
@@ -106,24 +107,34 @@ $('.wordbox').on('keydown', function(e) {
   }
 });
 
-// Initial retrival
-$.ajax(makePost(
-  "chatterbox/requestposts/", 
-  "POST", 
-  window.lastMessageRecieved, 
-  function (data) {
-    data = JSON.parse(data);
-    console.log('chatterbox: Messages retrieved');
-    console.log(data);
-    displayLastMessage(data.results);
-  },
-  function () {
-    console.error('chatterbox: No response from server');
-  }
-));
-/*
-// Retrieve every 500 ms
-setInterval(function() {
-  $.ajax(get);
-}, 1000);
-*/
+var requestMessages = function() {
+  $.ajax(makePost(
+    "chatterbox/requestposts/", 
+    "POST", 
+    window.lastMessageRecieved, 
+    function (data) {
+      data = JSON.parse(data);
+      if (data.results !== undefined) {
+        var resultsLength = data.results.length;
+
+        var lastMessageId = data.results[(resultsLength - 1)].id;
+
+        window.messages = window.messages.concat(data.results);
+        window.lastMessageRecieved = lastMessageId;
+
+        console.log('chatterbox: New Messages retrieved');
+      }
+    },
+    function () {
+      console.error('chatterbox: No response from server');
+    }
+  ));
+}
+
+var listenForMessages = function() {
+  setTimeout(function(){
+    requestMessages();
+    listenForMessages();
+  }, 500);
+}
+listenForMessages();
